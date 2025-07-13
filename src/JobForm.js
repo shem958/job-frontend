@@ -9,7 +9,9 @@ const JobForm = () => {
     company_name: "",
     location: "",
     description: "",
+    salary: "", // Added salary field
   });
+
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -25,30 +27,40 @@ const JobForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const request = id
       ? api.put(`/jobs/${id}/`, form)
       : api.post("/jobs/", form);
-    request.then(() => navigate("/"));
+
+    request
+      .then(() => navigate("/"))
+      .catch((error) => {
+        console.error("Backend error:", error.response?.data || error.message);
+      });
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4 max-w-xl mx-auto">
       <h1 className="text-xl font-bold mb-4">{id ? "Edit Job" : "Add Job"}</h1>
-      {["title", "company_name", "location", "description"].map((field) => (
-        <div key={field} className="mb-4">
-          <label className="block mb-1 capitalize">
-            {field.replace("_", " ")}
-          </label>
-          <input
-            type="text"
-            name={field}
-            value={form[field]}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-        </div>
-      ))}
+
+      {["title", "company_name", "location", "description", "salary"].map(
+        (field) => (
+          <div key={field} className="mb-4">
+            <label className="block mb-1 capitalize">
+              {field.replace("_", " ")}
+            </label>
+            <input
+              type={field === "salary" ? "number" : "text"}
+              name={field}
+              value={form[field]}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+        )
+      )}
+
       <button
         type="submit"
         className="bg-blue-500 text-white px-4 py-2 rounded"

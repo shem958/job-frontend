@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import JobList from "./JobList";
 import JobForm from "./JobForm";
 import JobDetail from "./JobDetail";
+import "./input.css";
 
 const App = () => {
   return (
